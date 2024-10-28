@@ -9,8 +9,8 @@ namespace TechnicoApplication.Interfaces;
 
 public interface IOwnerService
 {
-    public void Create(int vat, string name, string surname, string address, int phonenumber, string email, string password, UserType usertype);
-    public void Display(int id);
-    public void Update(int id, int vat, string name, string surname, string address, int phonenumber, string email, string password, UserType usertype);
-    public void Delete(int id);
+    public Owner Create(Owner owner);
+    public Owner? Display(int id);
+    public Owner? Update(Owner owner);
+    public bool Delete(int id);
 }

@@ -20,7 +20,7 @@ public class ApplicationDbContext : DbContext
         optionsBuilder.UseSqlServer(connectionString);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder modelBuilder)//check to add constraints
     {
         //modelBuilder
         //    .Entity<Customer>()

@@ -5,42 +5,54 @@ using System.Text;
 using System.Threading.Tasks;
 using TechnicoApplication.Interfaces;
 using TechnicoApplication.Models;
+using TechnicoApplication.Repositories;
 
 namespace TechnicoApplication.Services;
 
 public class OwnerService : IOwnerService
 {
-    private Owner _owner;
+    private ApplicationDbContext db;
 
-    public OwnerService(Owner owner)
+    public OwnerService(ApplicationDbContext db)
     {
-        _owner = owner;
+        this.db = db;
     }
-    public void Create(int vat, string name, string surname, string address, int phonenumber, string email, string password, UserType usertype) 
+    public Owner Create(Owner owner) 
     {
-        _owner = new Owner() 
+        db.Owners.Add(owner);
+        db.SaveChanges();
+        return owner;//add response + check
+    }
+    public Owner? Display(int id) 
+    {
+        return db.Owners.Where(o => o.ID == id).FirstOrDefault();//add response + check
+    }
+    public Owner? Update(Owner owner) 
+    {
+        Owner? ownerdb = db.Owners.FirstOrDefault(c => c.ID == owner.ID);
+        if (ownerdb != null)
         {
-            VAT = vat,
-            Name = name,
-            Surname = surname,
-            Address = address,
-            PhoneNumber = phonenumber,
-            Email = email,
-            Password = password,
-            UserType = usertype
-        };
-        //add logic for persistence
+            ownerdb.VAT = owner.VAT;
+            ownerdb.Name = owner.Name;
+            ownerdb.Surname = owner.Surname;
+            ownerdb.Address = owner.Address;
+            ownerdb.PhoneNumber = owner.PhoneNumber;
+            ownerdb.Email = owner.Email;
+            ownerdb.Password = owner.Password;
+            ownerdb.OwnerItems = owner.OwnerItems;
+            db.SaveChanges();
+        }
+        return ownerdb;//add response
     }
-    public void Display(int id) 
+    public bool Delete(int id) 
     {
-
-    }
-    public void Update(int id, int vat, string name, string surname, string address, int phonenumber, string email, string password, UserType usertype) 
-    {
-
-    }
-    public void Delete(int id) 
-    {
-
+        Owner? ownerdb = db.Owners.FirstOrDefault(c => c.ID == id);
+        if (ownerdb != null)
+        {
+            db.Owners.Remove(ownerdb);
+            db.SaveChanges();
+            return true;
+        }
+        return false;//add response
     }
 }
