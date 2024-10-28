@@ -9,8 +9,8 @@ namespace TechnicoApplication.Interfaces;
 
 public interface IItemService
 {
-    public void Create(int e9number, string address, DateTime yearofconstruction, string type, int ownervat);
+    public void Create(int e9number, string address, DateTime yearofconstruction, ItemType type, int ownervat);
     public void Display(int id);
-    public void Update(int id, int e9number, string address, DateTime yearofconstruction, string type, int ownervat);
+    public void Update(int id, int e9number, string address, DateTime yearofconstruction, ItemType type, int ownervat);
     public void Delete(int id);
 }

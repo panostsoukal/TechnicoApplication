@@ -16,7 +16,7 @@ public class OwnerService : IOwnerService
     {
         _owner = owner;
     }
-    public void Create(int vat, string name, string surname, string address, int phonenumber, string email, string password, string usertype) 
+    public void Create(int vat, string name, string surname, string address, int phonenumber, string email, string password, UserType usertype) 
     {
         _owner = new Owner() 
         {
@@ -35,7 +35,7 @@ public class OwnerService : IOwnerService
     {
 
     }
-    public void Update(int id, int vat, string name, string surname, string address, int phonenumber, string email, string password, string usertype) 
+    public void Update(int id, int vat, string name, string surname, string address, int phonenumber, string email, string password, UserType usertype) 
     {
 
     }
