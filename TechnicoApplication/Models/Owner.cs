@@ -28,5 +28,6 @@ public class Owner
     public string Password { get; set; } = string.Empty;
     public UserType UserType { get; set; } = default;
     public List<OwnerItem> OwnerItems { get; set; } = [];
+    public List<Repair> Repairs { get; set; } = [];
 
 }

@@ -13,6 +13,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Owner> Owners { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<Repair> Repairs { get; set; }
+    public DbSet<OwnerItem> OwnerItems { get; set; }
+
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

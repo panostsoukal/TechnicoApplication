@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechnicoApplication.Repositories;
 
@@ -11,9 +12,11 @@ using TechnicoApplication.Repositories;
 namespace TechnicoApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241029194825_M5")]
+    partial class M5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -110,7 +113,7 @@ namespace TechnicoApplication.Migrations
 
                     b.HasIndex("OwnerID");
 
-                    b.ToTable("OwnerItems");
+                    b.ToTable("OwnerItem");
                 });
 
             modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>

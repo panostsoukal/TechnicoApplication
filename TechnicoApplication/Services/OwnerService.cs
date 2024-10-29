@@ -29,7 +29,7 @@ public class OwnerService : IOwnerService
     }
     public Owner? Update(Owner owner) 
     {
-        Owner? ownerdb = db.Owners.FirstOrDefault(c => c.ID == owner.ID);
+        Owner? ownerdb = db.Owners.FirstOrDefault(o => o.ID == owner.ID);
         if (ownerdb != null)
         {
             ownerdb.VAT = owner.VAT;
@@ -40,13 +40,14 @@ public class OwnerService : IOwnerService
             ownerdb.Email = owner.Email;
             ownerdb.Password = owner.Password;
             ownerdb.OwnerItems = owner.OwnerItems;
+            //ownerdb = owner;
             db.SaveChanges();
         }
         return ownerdb;//add response
     }
     public bool Delete(int id) 
     {
-        Owner? ownerdb = db.Owners.FirstOrDefault(c => c.ID == id);
+        Owner? ownerdb = db.Owners.FirstOrDefault(o => o.ID == id);
         if (ownerdb != null)
         {
             db.Owners.Remove(ownerdb);

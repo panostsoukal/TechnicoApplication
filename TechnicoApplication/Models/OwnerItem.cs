@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TechnicoApplication.Models
+namespace TechnicoApplication.Models;
+
+public class OwnerItem
 {
-    public class OwnerItem
-    {
-        [Key]
-        public int Id { get; set; }
-        public Owner? Owner { get; set; }
-        public Item? Item { get; set; }
-    }
+    [Key]
+    public int Id { get; set; }
+    public Owner? Owner { get; set; }
+    public Item? Item { get; set; }
 }
