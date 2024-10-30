@@ -34,8 +34,9 @@ namespace TechnicoApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("E9Number")
-                        .HasColumnType("int");
+                    b.Property<string>("E9Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -72,8 +73,9 @@ namespace TechnicoApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -82,8 +84,9 @@ namespace TechnicoApplication.Migrations
                     b.Property<int>("UserType")
                         .HasColumnType("int");
 
-                    b.Property<int>("VAT")
-                        .HasColumnType("int");
+                    b.Property<string>("VAT")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
@@ -135,6 +138,9 @@ namespace TechnicoApplication.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ItemID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("OwnerID")
                         .HasColumnType("int");
 
@@ -145,6 +151,8 @@ namespace TechnicoApplication.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ItemID");
 
                     b.HasIndex("OwnerID");
 
@@ -168,9 +176,15 @@ namespace TechnicoApplication.Migrations
 
             modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
                 {
+                    b.HasOne("TechnicoApplication.Models.Item", "Item")
+                        .WithMany("Repairs")
+                        .HasForeignKey("ItemID");
+
                     b.HasOne("TechnicoApplication.Models.Owner", "Owner")
                         .WithMany("Repairs")
                         .HasForeignKey("OwnerID");
+
+                    b.Navigation("Item");
 
                     b.Navigation("Owner");
                 });
@@ -178,6 +192,8 @@ namespace TechnicoApplication.Migrations
             modelBuilder.Entity("TechnicoApplication.Models.Item", b =>
                 {
                     b.Navigation("OwnerItems");
+
+                    b.Navigation("Repairs");
                 });
 
             modelBuilder.Entity("TechnicoApplication.Models.Owner", b =>

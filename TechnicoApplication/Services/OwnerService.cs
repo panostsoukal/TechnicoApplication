@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ namespace TechnicoApplication.Services;
 
 public class OwnerService : IOwnerService
 {
-    private ApplicationDbContext db;
+    private readonly ApplicationDbContext db;
 
     public OwnerService(ApplicationDbContext db)
     {
@@ -19,6 +20,12 @@ public class OwnerService : IOwnerService
     }
     public Owner Create(Owner owner) 
     {
+        var existingOwner = db.Owners.FirstOrDefault(o => o.VAT == owner.VAT);
+        if (existingOwner != null)
+        {
+            return existingOwner;
+        }
+
         db.Owners.Add(owner);
         db.SaveChanges();
         return owner;//add response + check
@@ -39,16 +46,21 @@ public class OwnerService : IOwnerService
             ownerdb.PhoneNumber = owner.PhoneNumber;
             ownerdb.Email = owner.Email;
             ownerdb.Password = owner.Password;
+            ownerdb.UserType = owner.UserType;
             ownerdb.OwnerItems = owner.OwnerItems;
-            //ownerdb = owner;
+            ownerdb.Repairs = owner.Repairs;
             db.SaveChanges();
         }
         return ownerdb;//add response
     }
-    public bool Delete(int id) 
+    public bool Delete(int id)//add check to delete only if no repairs or items are tied to them
     {
-        Owner? ownerdb = db.Owners.FirstOrDefault(o => o.ID == id);
-        if (ownerdb != null)
+        Owner? ownerdb = db.Owners
+            .Include(o => o.OwnerItems)
+            .Include(o => o.Repairs)
+            .FirstOrDefault(o => o.ID == id);
+
+        if (ownerdb != null && !ownerdb.OwnerItems.Any() && !ownerdb.Repairs.Any())
         {
             db.Owners.Remove(ownerdb);
             db.SaveChanges();

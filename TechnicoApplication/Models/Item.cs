@@ -12,11 +12,12 @@ public class Item
     [Key]
     public int ID { get; set; }
     [Required]
-    public int E9Number { get; set; }
+    public string E9Number { get; set; } = string.Empty;
     [Required]
     public string Address { get; set; } = string.Empty;
     public DateTime YearOfConstruction { get; set; }
     public ItemType Type { get; set; } = default;
     public List<OwnerItem> OwnerItems { get; set; } = [];
+    public List<Repair> Repairs { get; set; } = [];
 
 }

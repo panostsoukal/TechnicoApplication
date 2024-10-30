@@ -8,4 +8,4 @@ using TechnicoApplication.Models;
 
 namespace TechnicoApplication.Responses;
 
-public record ImmutableItem(int E9Number, string Address, DateTime YearOfConstruction, ItemType Type);
+public record ImmutableItem(string E9Number, string Address, DateTime YearOfConstruction, ItemType Type);

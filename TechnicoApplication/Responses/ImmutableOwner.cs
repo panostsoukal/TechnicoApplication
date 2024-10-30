@@ -8,4 +8,4 @@ using TechnicoApplication.Models;
 
 namespace TechnicoApplication.Responses;
 
-public record ImmutableOwner(int VAT, string Name, string Surname, string Address, int PhoneNumber, string Email, string Password, UserType UserType);
+public record ImmutableOwner(string VAT, string Name, string Surname, string Address, string PhoneNumber, string Email, string Password, UserType UserType);

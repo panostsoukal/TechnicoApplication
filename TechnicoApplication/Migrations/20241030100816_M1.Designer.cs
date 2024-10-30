@@ -12,7 +12,7 @@ using TechnicoApplication.Repositories;
 namespace TechnicoApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241026195453_M1")]
+    [Migration("20241030100816_M1")]
     partial class M1
     {
         /// <inheritdoc />
@@ -37,26 +37,17 @@ namespace TechnicoApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("E9Number")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OwnerID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("OwnerVAT")
+                    b.Property<string>("E9Number")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("YearOfConstruction")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("OwnerID");
 
                     b.ToTable("Items");
                 });
@@ -85,23 +76,47 @@ namespace TechnicoApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserType")
+                    b.Property<int>("UserType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("VAT")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("VAT")
-                        .HasColumnType("int");
 
                     b.HasKey("ID");
 
                     b.ToTable("Owners");
+                });
+
+            modelBuilder.Entity("TechnicoApplication.Models.OwnerItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ItemID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OwnerID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ItemID");
+
+                    b.HasIndex("OwnerID");
+
+                    b.ToTable("OwnerItems");
                 });
 
             modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
@@ -117,7 +132,8 @@ namespace TechnicoApplication.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(8, 2)
+                        .HasColumnType("decimal(8,2)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -125,43 +141,69 @@ namespace TechnicoApplication.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("ItemID")
+                        .HasColumnType("int");
+
                     b.Property<int?>("OwnerID")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ItemID");
 
                     b.HasIndex("OwnerID");
 
                     b.ToTable("Repairs");
                 });
 
-            modelBuilder.Entity("TechnicoApplication.Models.Item", b =>
+            modelBuilder.Entity("TechnicoApplication.Models.OwnerItem", b =>
                 {
-                    b.HasOne("TechnicoApplication.Models.Owner", null)
-                        .WithMany("Items")
-                        .HasForeignKey("OwnerID");
-                });
+                    b.HasOne("TechnicoApplication.Models.Item", "Item")
+                        .WithMany("OwnerItems")
+                        .HasForeignKey("ItemID");
 
-            modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
-                {
                     b.HasOne("TechnicoApplication.Models.Owner", "Owner")
-                        .WithMany()
+                        .WithMany("OwnerItems")
                         .HasForeignKey("OwnerID");
+
+                    b.Navigation("Item");
 
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
+                {
+                    b.HasOne("TechnicoApplication.Models.Item", "Item")
+                        .WithMany("Repairs")
+                        .HasForeignKey("ItemID");
+
+                    b.HasOne("TechnicoApplication.Models.Owner", "Owner")
+                        .WithMany("Repairs")
+                        .HasForeignKey("OwnerID");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("TechnicoApplication.Models.Item", b =>
+                {
+                    b.Navigation("OwnerItems");
+
+                    b.Navigation("Repairs");
+                });
+
             modelBuilder.Entity("TechnicoApplication.Models.Owner", b =>
                 {
-                    b.Navigation("Items");
+                    b.Navigation("OwnerItems");
+
+                    b.Navigation("Repairs");
                 });
 #pragma warning restore 612, 618
         }

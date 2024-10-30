@@ -13,7 +13,7 @@ public class Owner
     [Key]
     public int ID {  get; set; }
     [Required]
-    public int VAT {  get; set; }
+    public string VAT {  get; set; } = string.Empty;
     [Required]
     public string Name { get; set; } = string.Empty;
     [Required]
@@ -21,7 +21,7 @@ public class Owner
     [Required]
     public string Address { get; set; } = string.Empty;
     [Phone]
-    public int PhoneNumber { get; set; }
+    public string PhoneNumber { get; set; } = string.Empty;
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
     [Required]
