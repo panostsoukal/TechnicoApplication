@@ -7,37 +7,50 @@ using System.Threading.Tasks;
 using TechnicoApplication.Interfaces;
 using TechnicoApplication.Models;
 using TechnicoApplication.Repositories;
+using TechnicoApplication.Responses;
 
 namespace TechnicoApplication.Services;
 
 public class OwnerService : IOwnerService
 {
-    private readonly ApplicationDbContext db;
+    private readonly ApplicationDbContext _db;
+    private readonly IOwnerValidation _validation;
 
-    public OwnerService(ApplicationDbContext db)
+    public OwnerService(ApplicationDbContext db, IOwnerValidation validation)
     {
-        this.db = db;
+        this._db = db;
+        _validation = validation;
     }
-    public Owner Create(Owner owner) 
+    public PropertyResponse<Owner> Create(Owner owner) 
     {
-        var existingOwner = db.Owners.FirstOrDefault(o => o.VAT == owner.VAT);
+        var existingOwner = _db.Owners.FirstOrDefault(o => o.VAT == owner.VAT);
         if (existingOwner != null)
         {
-            return existingOwner;
+            return new PropertyResponse<Owner>
+            {
+                Status = 1,
+                Description = "Owner already exists",
+                Value = existingOwner
+            };
         }
 
-        db.Owners.Add(owner);
-        db.SaveChanges();
-        return owner;//add response + check
+        _db.Owners.Add(owner);
+        _db.SaveChanges();
+        return new PropertyResponse<Owner> 
+        {
+            Status = 0,
+            Description = "Success",
+            Value = owner 
+        };
     }
     public Owner? Display(int id) 
     {
-        return db.Owners.Where(o => o.ID == id).FirstOrDefault();//add response + check
+        return _db.Owners.Where(o => o.ID == id).FirstOrDefault();
     }
-    public Owner? Update(Owner owner) 
+    public PropertyResponse<Owner> Update(Owner owner) 
     {
-        Owner? ownerdb = db.Owners.FirstOrDefault(o => o.ID == owner.ID);
-        if (ownerdb != null)
+        Owner? ownerdb = _db.Owners.FirstOrDefault(o => o.ID == owner.ID);
+        if (_validation.OwnerValidator(ownerdb))
         {
             ownerdb.VAT = owner.VAT;
             ownerdb.Name = owner.Name;
@@ -49,23 +62,34 @@ public class OwnerService : IOwnerService
             ownerdb.UserType = owner.UserType;
             ownerdb.Items = owner.Items;
             ownerdb.Repairs = owner.Repairs;
-            db.SaveChanges();
+            _db.SaveChanges();
+            return new PropertyResponse<Owner>
+            {
+                Status = 0,
+                Description = "Success",
+                Value = ownerdb
+            };
         }
-        return ownerdb;//add response
+        return new PropertyResponse<Owner>
+        {
+            Status = 3,
+            Description = "Error updating owner",
+            Value = owner
+        };
     }
-    public bool Delete(int id)//add check to delete only if no repairs or items are tied to them
+    public bool Delete(int id)
     {
-        Owner? ownerdb = db.Owners
+        Owner? ownerdb = _db.Owners
             .Include(o => o.Items)
             .Include(o => o.Repairs)
             .FirstOrDefault(o => o.ID == id);
 
-        if (ownerdb != null && !ownerdb.Items.Any() && !ownerdb.Repairs.Any())
+        if (_validation.OwnerValidator(ownerdb) && !ownerdb.Items.Any() && !ownerdb.Repairs.Any())
         {
-            db.Owners.Remove(ownerdb);
-            db.SaveChanges();
+            _db.Owners.Remove(ownerdb);
+            _db.SaveChanges();
             return true;
         }
-        return false;//add response
+        return false;
     }
 }

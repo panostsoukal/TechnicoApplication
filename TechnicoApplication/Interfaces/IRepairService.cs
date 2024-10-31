@@ -10,9 +10,9 @@ namespace TechnicoApplication.Interfaces;
 
 public interface IRepairService
 {
-    public Repair Create(Repair repair);
-    public Repair? Search(int id);
+    public PropertyResponse<Repair> Create(Repair repair);
+    public PropertyResponse<Repair> Search(int id);
     public List<Repair?> SearchRepairs(int id);
-    public Repair? Update(Repair repair);
+    public PropertyResponse<Repair> Update(Repair repair);
     public bool Delete(int id);
 }

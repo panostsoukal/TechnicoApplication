@@ -10,9 +10,9 @@ namespace TechnicoApplication.Interfaces;
 
 public interface IItemService
 {
-    public Item Create(Item item);
-    public Item? View(int id);
+    public PropertyResponse<Item> Create(Item item);
+    public PropertyResponse<Item> View(int id);
     public List<Item?> ViewItems(int id);
-    public Item? Update(Item item);
+    public PropertyResponse<Item> Update(Item item);
     public bool Delete(int id);
 }

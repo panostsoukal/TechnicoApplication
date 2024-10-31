@@ -14,37 +14,72 @@ namespace TechnicoApplication.Services;
 
 public class RepairService : IRepairService
 {
-    private readonly ApplicationDbContext db;
+    private readonly ApplicationDbContext _db;
+    private readonly IRepairValidation _validation;
 
-    public RepairService(ApplicationDbContext db)
+    public RepairService(ApplicationDbContext db, IRepairValidation validation)
     {
-        this.db = db;
+        this._db = db;
+        _validation = validation;
     }
-    public Repair Create(Repair repair)
+    public PropertyResponse<Repair> Create(Repair repair)
     {
-        db.Repairs.Add(repair);
-        db.SaveChanges();
-        return repair;//add response + check
+        var existingRepair = _db.Repairs.FirstOrDefault(x => x.Address == repair.Address && x.Type == repair.Type && x.Status != RepairStatus.Complete);
+        if (existingRepair != null) 
+        {
+            return new PropertyResponse<Repair>
+            {
+                Status = 1,
+                Description = "Repair already exists",
+                Value = existingRepair
+            };
+        }
+        _db.Repairs.Add(repair);
+        _db.SaveChanges();
+        return new PropertyResponse<Repair>
+        {
+            Status = 0,
+            Description = "Success",
+            Value = repair
+        };
     }
-    public Repair? Search(int id)
+    public PropertyResponse<Repair> Search(int id)
     {
-        return db.Repairs.Where(r => r.ID == id).FirstOrDefault();//add response + check
+        var repairdb = _db.Repairs.Where(r => r.ID == id).FirstOrDefault();
+        if (!_validation.RepairValidator(repairdb))
+        {
+            return new PropertyResponse<Repair>
+            {
+                Status = 2,
+                Description = "Repair not found",
+                Value = repairdb
+            };
+        }
+        return new PropertyResponse<Repair>
+        {
+            Status = 0,
+            Description = "Success",
+            Value = repairdb
+        };
     }
     public List<Repair?> SearchRepairs(int id)
     {
-        var owner = db.Owners.FirstOrDefault(o => o.ID == id);
+        var repairdb = _db.Repairs.FirstOrDefault(r => r.Owner.ID == id);
 
-        if (owner == null) return new List<Repair?>();//add response
+        if (!_validation.RepairValidator(repairdb))
+        {
+            return new List<Repair?>();
+        }
 
-        var repairlist = db.Repairs
-            .Where(r => r.Owner != null && r.Owner.ID == id)
+        var repairlist = _db.Repairs
+            .Where(r => r.Owner.ID == id)
             .ToList();
         return repairlist;
     }
-    public Repair? Update(Repair repair)
+    public PropertyResponse<Repair> Update(Repair repair)
     {
-        Repair? repairdb = db.Repairs.FirstOrDefault(r => r.ID == repair.ID);
-        if (repairdb != null)
+        Repair? repairdb = _db.Repairs.FirstOrDefault(r => r.ID == repair.ID);
+        if (_validation.RepairValidator(repairdb))
         {
             repairdb.Date = repair.Date;
             repairdb.Type = repair.Type;
@@ -54,19 +89,30 @@ public class RepairService : IRepairService
             repairdb.Cost = repair.Cost;
             repairdb.Owner = repair.Owner;
             repairdb.Item = repair.Item;
-            db.SaveChanges();
+            _db.SaveChanges();
+            return new PropertyResponse<Repair>
+            {
+                Status = 0,
+                Description = "Success",
+                Value = repairdb
+            };
         }
-        return repair;//add response
+        return new PropertyResponse<Repair>
+        {
+            Status = 2,
+            Description = "Error updating repair",
+            Value = repair
+        };
     }
     public bool Delete(int id)
     {
-        Repair? repairdb = db.Repairs.FirstOrDefault(r => r.ID == id);
-        if (repairdb != null)
+        Repair? repairdb = _db.Repairs.FirstOrDefault(r => r.ID == id);
+        if (_validation.RepairValidator(repairdb))
         {
-            db.Repairs.Remove(repairdb);
-            db.SaveChanges();
+            _db.Repairs.Remove(repairdb);
+            _db.SaveChanges();
             return true;
         }
-        return false;//add response
+        return false;
     }
 }
