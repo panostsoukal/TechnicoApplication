@@ -25,7 +25,8 @@ var item_one = new Item()
     E9Number = "abcd1234",
     Address = "Home Address 1",
     YearOfConstruction = new DateTime(1990, 1, 1, 0, 0, 0),
-    Type = ItemType.Apartment_Building
+    Type = ItemType.Apartment_Building,
+    Owners = new List<Owner> { owner_one }
 };
 
 var repair_one = new Repair() 
@@ -57,7 +58,8 @@ var item_two = new Item()
     E9Number = "bbbbbbb222222",
     Address = "Home Address 2",
     YearOfConstruction = new DateTime(1991, 1, 1, 0, 0, 0),
-    Type = ItemType.Maisonet
+    Type = ItemType.Maisonet,
+    Owners = new List<Owner> { owner_two }
 };
 
 var item_three = new Item()
@@ -65,38 +67,49 @@ var item_three = new Item()
     E9Number = "cccccc333333",
     Address = "Home Address 3",
     YearOfConstruction = new DateTime(1992, 1, 1, 0, 0, 0),
-    Type = ItemType.Maisonet
+    Type = ItemType.Maisonet,
+    Owners = new List<Owner> { owner_one, owner_two }
 };
-
-var owneritem_one = new OwnerItem
-{
-    Owner = owner_one,
-    Item = item_one
-};
-
-var owneritem_two = new OwnerItem
-{
-    Owner = owner_two,
-    Item = item_two
-};
-
-var owneritem_three = new OwnerItem
-{
-    Owner = owner_two,
-    Item = item_three
-};
-
-var owneritem_four = new OwnerItem
-{
-    Owner = owner_one,
-    Item = item_three
-};
-
 ApplicationDbContext db = new ApplicationDbContext();
 OwnerService ownerService = new OwnerService(db);
 ItemService itemService = new ItemService(db);
 RepairService repairService = new RepairService(db);
-OwnerItemService ownerItemService = new OwnerItemService(db);
+ownerService.Create(owner_one);
+ownerService.Create(owner_two);
+itemService.Create(item_one);
+itemService.Create(item_two);
+itemService.Create(item_three);
+repairService.Create(repair_one);
+
+//var owneritem_one = new OwnerItem
+//{
+//    Owner = owner_one,
+//    Item = item_one
+//};
+
+//var owneritem_two = new OwnerItem
+//{
+//    Owner = owner_two,
+//    Item = item_two
+//};
+
+//var owneritem_three = new OwnerItem
+//{
+//    Owner = owner_two,
+//    Item = item_three
+//};
+
+//var owneritem_four = new OwnerItem
+//{
+//    Owner = owner_one,
+//    Item = item_three
+//};
+
+//ApplicationDbContext db = new ApplicationDbContext();
+//OwnerService ownerService = new OwnerService(db);
+//ItemService itemService = new ItemService(db);
+//RepairService repairService = new RepairService(db);
+//OwnerItemService ownerItemService = new OwnerItemService(db);
 
 //ownerService.Create(owner_one);
 //ownerService.Create(owner_two);
@@ -108,7 +121,52 @@ OwnerItemService ownerItemService = new OwnerItemService(db);
 //ownerItemService.Create(owneritem_three);
 //ownerItemService.Create(owneritem_four);
 
+//Item? testItem = itemService.View(15);
+//List<Item?> items1 = itemService.ViewItems(13);
+//List<Item?> items2 = itemService.ViewItems(14);
+//Repair? testRepair = repairService.Search(4);
+//List<Repair?> repairs1 = repairService.SearchRepairs(13);
+//List<Repair?> repairs2 = repairService.SearchRepairs(14);
 
+//Console.WriteLine($"item name = {testItem?.E9Number} id = {testItem?.ID}");
+
+//foreach (var item in items1)
+//{
+//    Console.WriteLine($"list1 item name = {item?.E9Number} id = {item?.ID}");
+//}
+
+//foreach (var item in items2)
+//{
+//    Console.WriteLine($"list2 item name = {item?.E9Number} id = {item?.ID}");
+//}
+
+
+//Console.WriteLine($"repair name = {testRepair?.Address} id = {testRepair?.ID}");
+
+//foreach (var repair in repairs1)
+//{
+//    Console.WriteLine($"list1 repair name = {repair?.Address} id = {repair?.ID}");
+//}
+
+//foreach (var repair in repairs2)
+//{
+//    Console.WriteLine($"list2 repair name = {repair?.Address} id = {repair?.ID}");
+//}
+
+//var owner_upd = new Owner()
+//{
+//    VAT = "1234abcd",
+//    Name = "no",
+//    Surname = "one",
+//    Address = "Zografou, Athens",
+//    PhoneNumber = "1234567890",
+//    Email = "who@cares.com",
+//    Password = "12345",
+//    UserType = UserType.Client,
+//    ID = 12
+//};
+//ownerService.Update(owner_upd);
+//ownerService.Delete(12);
 
 //Owner? testOwner = ownerService.Display(1);
 

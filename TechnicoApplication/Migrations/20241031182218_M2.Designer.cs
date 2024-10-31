@@ -12,8 +12,8 @@ using TechnicoApplication.Repositories;
 namespace TechnicoApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241030100816_M1")]
-    partial class M1
+    [Migration("20241031182218_M2")]
+    partial class M2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,21 @@ namespace TechnicoApplication.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("ItemOwner", b =>
+                {
+                    b.Property<int>("ItemsID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OwnersID")
+                        .HasColumnType("int");
+
+                    b.HasKey("ItemsID", "OwnersID");
+
+                    b.HasIndex("OwnersID");
+
+                    b.ToTable("ItemOwner");
+                });
 
             modelBuilder.Entity("TechnicoApplication.Models.Item", b =>
                 {
@@ -39,7 +54,7 @@ namespace TechnicoApplication.Migrations
 
                     b.Property<string>("E9Number")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -48,6 +63,9 @@ namespace TechnicoApplication.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("E9Number")
+                        .IsUnique();
 
                     b.ToTable("Items");
                 });
@@ -66,7 +84,7 @@ namespace TechnicoApplication.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -93,30 +111,10 @@ namespace TechnicoApplication.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("Owners");
-                });
-
-            modelBuilder.Entity("TechnicoApplication.Models.OwnerItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ItemID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OwnerID")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ItemID");
-
-                    b.HasIndex("OwnerID");
-
-                    b.ToTable("OwnerItems");
                 });
 
             modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
@@ -162,19 +160,19 @@ namespace TechnicoApplication.Migrations
                     b.ToTable("Repairs");
                 });
 
-            modelBuilder.Entity("TechnicoApplication.Models.OwnerItem", b =>
+            modelBuilder.Entity("ItemOwner", b =>
                 {
-                    b.HasOne("TechnicoApplication.Models.Item", "Item")
-                        .WithMany("OwnerItems")
-                        .HasForeignKey("ItemID");
+                    b.HasOne("TechnicoApplication.Models.Item", null)
+                        .WithMany()
+                        .HasForeignKey("ItemsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("TechnicoApplication.Models.Owner", "Owner")
-                        .WithMany("OwnerItems")
-                        .HasForeignKey("OwnerID");
-
-                    b.Navigation("Item");
-
-                    b.Navigation("Owner");
+                    b.HasOne("TechnicoApplication.Models.Owner", null)
+                        .WithMany()
+                        .HasForeignKey("OwnersID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
@@ -194,15 +192,11 @@ namespace TechnicoApplication.Migrations
 
             modelBuilder.Entity("TechnicoApplication.Models.Item", b =>
                 {
-                    b.Navigation("OwnerItems");
-
                     b.Navigation("Repairs");
                 });
 
             modelBuilder.Entity("TechnicoApplication.Models.Owner", b =>
                 {
-                    b.Navigation("OwnerItems");
-
                     b.Navigation("Repairs");
                 });
 #pragma warning restore 612, 618

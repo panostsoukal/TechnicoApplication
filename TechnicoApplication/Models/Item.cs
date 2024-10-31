@@ -17,7 +17,7 @@ public class Item
     public string Address { get; set; } = string.Empty;
     public DateTime YearOfConstruction { get; set; }
     public ItemType Type { get; set; } = default;
-    public List<OwnerItem> OwnerItems { get; set; } = [];
+    public List<Owner> Owners { get; set; } = [];
     public List<Repair> Repairs { get; set; } = [];
 
 }

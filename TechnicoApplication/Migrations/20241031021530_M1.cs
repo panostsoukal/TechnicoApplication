@@ -48,27 +48,27 @@ namespace TechnicoApplication.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OwnerItems",
+                name: "ItemOwner",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerID = table.Column<int>(type: "int", nullable: true),
-                    ItemID = table.Column<int>(type: "int", nullable: true)
+                    ItemsID = table.Column<int>(type: "int", nullable: false),
+                    OwnersID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OwnerItems", x => x.Id);
+                    table.PrimaryKey("PK_ItemOwner", x => new { x.ItemsID, x.OwnersID });
                     table.ForeignKey(
-                        name: "FK_OwnerItems_Items_ItemID",
-                        column: x => x.ItemID,
+                        name: "FK_ItemOwner_Items_ItemsID",
+                        column: x => x.ItemsID,
                         principalTable: "Items",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OwnerItems_Owners_OwnerID",
-                        column: x => x.OwnerID,
+                        name: "FK_ItemOwner_Owners_OwnersID",
+                        column: x => x.OwnersID,
                         principalTable: "Owners",
-                        principalColumn: "ID");
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -102,14 +102,9 @@ namespace TechnicoApplication.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_OwnerItems_ItemID",
-                table: "OwnerItems",
-                column: "ItemID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OwnerItems_OwnerID",
-                table: "OwnerItems",
-                column: "OwnerID");
+                name: "IX_ItemOwner_OwnersID",
+                table: "ItemOwner",
+                column: "OwnersID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Repairs_ItemID",
@@ -126,7 +121,7 @@ namespace TechnicoApplication.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "OwnerItems");
+                name: "ItemOwner");
 
             migrationBuilder.DropTable(
                 name: "Repairs");

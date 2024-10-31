@@ -42,12 +42,7 @@ public class ItemService : IItemService
 
         if (owner == null) return new List<Item?>();//add response
 
-        var itemlist = db.OwnerItems
-            .Where(oi => oi.Owner != null && oi.Owner.ID == id)
-            .Select(oi => oi.Item)
-            .Where(item => item != null)
-            .ToList();
-        return itemlist;
+        return owner.Items.ToList();
     }
     public Item? Update(Item item)
     {
@@ -58,8 +53,8 @@ public class ItemService : IItemService
             itemdb.Address = item.Address;
             itemdb.YearOfConstruction = item.YearOfConstruction;
             itemdb.Type = item.Type;
-            itemdb.OwnerItems = item.OwnerItems;
-            itemdb.Repairs = item.Repairs;
+            itemdb.Owners = item.Owners;
+            itemdb.Repairs = item.Repairs;//fix
             db.SaveChanges();
         }
         return itemdb;//add response

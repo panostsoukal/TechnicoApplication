@@ -13,8 +13,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<Owner> Owners { get; set; }
     public DbSet<Item> Items { get; set; }
     public DbSet<Repair> Repairs { get; set; }
-    public DbSet<OwnerItem> OwnerItems { get; set; }
-
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -22,12 +20,25 @@ public class ApplicationDbContext : DbContext
         optionsBuilder.UseSqlServer(connectionString);
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)//check to add constraints
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        //modelBuilder
-        //    .Entity<Customer>()
-        //    .HasIndex(p => p.Email)
-        //    .IsUnique();
-    }
 
+        modelBuilder
+            .Entity<Owner>()
+            .HasIndex(p => p.Email)
+            .IsUnique();
+
+        modelBuilder
+            .Entity<Item>()
+            .HasIndex(p => p.E9Number)
+            .IsUnique();
+
+        //modelBuilder.Entity<Owner>()
+        //.HasMany(o => o.Items)
+        //.WithMany(i => i.Owners)
+        //.UsingEntity(j => j.ToTable("ItemOwner"));
+
+        ////modelBuilder.Entity<Owner>().HasMany(u => u.Items).WithMany(p => p.Owners).UsingEntity(j => j.ToTable("ItemOwner"));
+        //base.OnModelCreating(modelBuilder);
+    }
 }

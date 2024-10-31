@@ -47,7 +47,7 @@ public class OwnerService : IOwnerService
             ownerdb.Email = owner.Email;
             ownerdb.Password = owner.Password;
             ownerdb.UserType = owner.UserType;
-            ownerdb.OwnerItems = owner.OwnerItems;
+            ownerdb.Items = owner.Items;
             ownerdb.Repairs = owner.Repairs;
             db.SaveChanges();
         }
@@ -56,11 +56,11 @@ public class OwnerService : IOwnerService
     public bool Delete(int id)//add check to delete only if no repairs or items are tied to them
     {
         Owner? ownerdb = db.Owners
-            .Include(o => o.OwnerItems)
+            .Include(o => o.Items)
             .Include(o => o.Repairs)
             .FirstOrDefault(o => o.ID == id);
 
-        if (ownerdb != null && !ownerdb.OwnerItems.Any() && !ownerdb.Repairs.Any())
+        if (ownerdb != null && !ownerdb.Items.Any() && !ownerdb.Repairs.Any())
         {
             db.Owners.Remove(ownerdb);
             db.SaveChanges();
