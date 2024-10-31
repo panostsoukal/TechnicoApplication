@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechnicoApplication.Repositories;
 
@@ -11,9 +12,11 @@ using TechnicoApplication.Repositories;
 namespace TechnicoApplication.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241031214820_M5")]
+    partial class M5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,10 +102,6 @@ namespace TechnicoApplication.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RepairID")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Surname")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -158,6 +157,8 @@ namespace TechnicoApplication.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("OwnerID");
+
                     b.ToTable("Repairs");
                 });
 
@@ -174,6 +175,20 @@ namespace TechnicoApplication.Migrations
                         .HasForeignKey("OwnersID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("TechnicoApplication.Models.Repair", b =>
+                {
+                    b.HasOne("TechnicoApplication.Models.Owner", null)
+                        .WithMany("Repairs")
+                        .HasForeignKey("OwnerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("TechnicoApplication.Models.Owner", b =>
+                {
+                    b.Navigation("Repairs");
                 });
 #pragma warning restore 612, 618
         }

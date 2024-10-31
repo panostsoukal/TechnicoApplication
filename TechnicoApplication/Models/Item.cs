@@ -18,6 +18,6 @@ public class Item
     public DateTime YearOfConstruction { get; set; }
     public ItemType Type { get; set; } = default;
     public List<Owner> Owners { get; set; } = [];
-    public List<Repair> Repairs { get; set; } = [];
+    public List<int> RepairID { get; set; } = [];
 
 }

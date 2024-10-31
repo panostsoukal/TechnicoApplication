@@ -61,7 +61,7 @@ public class OwnerService : IOwnerService
             ownerdb.Password = owner.Password;
             ownerdb.UserType = owner.UserType;
             ownerdb.Items = owner.Items;
-            ownerdb.Repairs = owner.Repairs;
+            ownerdb.RepairID = owner.RepairID;
             _db.SaveChanges();
             return new PropertyResponse<Owner>
             {
@@ -79,12 +79,9 @@ public class OwnerService : IOwnerService
     }
     public bool Delete(int id)
     {
-        Owner? ownerdb = _db.Owners
-            .Include(o => o.Items)
-            .Include(o => o.Repairs)
-            .FirstOrDefault(o => o.ID == id);
+        Owner? ownerdb = _db.Owners.FirstOrDefault(o => o.ID == id);
 
-        if (_validation.OwnerValidator(ownerdb) && !ownerdb.Items.Any() && !ownerdb.Repairs.Any())
+        if (_validation.OwnerValidator(ownerdb) && !ownerdb.Items.Any() && !ownerdb.RepairID.Any())
         {
             _db.Owners.Remove(ownerdb);
             _db.SaveChanges();

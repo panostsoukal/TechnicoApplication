@@ -21,7 +21,7 @@ public class Repair
     public RepairStatus Status { get; set; } = default;
     [Precision(8, 2)]
     public decimal Cost { get; set; }
-    public Owner? Owner { get; set; }
-    public Item? Item { get; set; }
+    public int OwnerID { get; set; }
+    public int ItemID { get; set; }
 
 }

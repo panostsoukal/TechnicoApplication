@@ -64,7 +64,7 @@ public class RepairService : IRepairService
     }
     public List<Repair?> SearchRepairs(int id)
     {
-        var repairdb = _db.Repairs.FirstOrDefault(r => r.Owner.ID == id);
+        var repairdb = _db.Repairs.FirstOrDefault(r => r.OwnerID == id);
 
         if (!_validation.RepairValidator(repairdb))
         {
@@ -72,7 +72,7 @@ public class RepairService : IRepairService
         }
 
         var repairlist = _db.Repairs
-            .Where(r => r.Owner.ID == id)
+            .Where(r => r.OwnerID == id)
             .ToList();
         return repairlist;
     }
@@ -87,8 +87,8 @@ public class RepairService : IRepairService
             repairdb.Address = repair.Address;
             repairdb.Status = repair.Status;
             repairdb.Cost = repair.Cost;
-            repairdb.Owner = repair.Owner;
-            repairdb.Item = repair.Item;
+            repairdb.OwnerID = repair.OwnerID;
+            repairdb.ItemID = repair.ItemID;
             _db.SaveChanges();
             return new PropertyResponse<Repair>
             {

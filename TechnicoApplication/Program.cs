@@ -1,5 +1,8 @@
 ﻿//to do - 
 //check crud functionality and validations
+//known issues
+// creating an owner first and then running the program again and creating an item that references that owner leads to conflict
+//repair validation doesnt have a check for datetime because create and delete have different datetime if clauses
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using TechnicoApplication.Models;
@@ -36,8 +39,8 @@ var repair_one = new Repair()
     Address = "Home Address 1",
     Status = RepairStatus.Pending,
     Cost = 200m,
-    Owner = owner_one,
-    Item = item_one
+    OwnerID = owner_one.ID,
+    ItemID = item_one.ID
 };
 
 var owner_two = new Owner()
@@ -76,11 +79,15 @@ RepairValidation repairValidation = new RepairValidation();
 OwnerService ownerService = new OwnerService(db, ownerValidation);
 ItemService itemService = new ItemService(db, itemValidation);
 RepairService repairService = new RepairService(db, repairValidation);
-ownerService.Create(owner_one);
-ownerService.Create(owner_two);
-itemService.Create(item_one);
-itemService.Create(item_two);
-itemService.Create(item_three);
-repairService.Create(repair_one);
-
-
+//ownerService.Create(owner_one);
+//ownerService.Create(owner_two);
+//itemService.Create(item_one);
+//itemService.Create(item_two);
+//itemService.Create(item_three);
+//repairService.Create(repair_one);
+repairService.Delete(10);
+itemService.Delete(20);
+itemService.Delete(21);
+itemService.Delete(22);
+ownerService.Delete(16);
+ownerService.Delete(17);

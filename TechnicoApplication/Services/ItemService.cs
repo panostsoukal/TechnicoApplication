@@ -89,7 +89,7 @@ public class ItemService : IItemService
             itemdb.YearOfConstruction = item.YearOfConstruction;
             itemdb.Type = item.Type;
             itemdb.Owners = item.Owners;
-            itemdb.Repairs = item.Repairs;
+            itemdb.RepairID = item.RepairID;
             _db.SaveChanges();
             return new PropertyResponse<Item>
             {
@@ -108,7 +108,7 @@ public class ItemService : IItemService
     public bool Delete(int id)
     {
         Item? itemdb = _db.Items.FirstOrDefault(i => i.ID == id);
-        if (!_validation.ItemValidator(itemdb) && !itemdb.Owners.Any() && !itemdb.Repairs.Any())
+        if (_validation.ItemValidator(itemdb) && !itemdb.Owners.Any() && !itemdb.RepairID.Any())
         {
             _db.Items.Remove(itemdb);
             _db.SaveChanges();

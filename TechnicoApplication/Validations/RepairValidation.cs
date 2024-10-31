@@ -14,13 +14,11 @@ public class RepairValidation : IRepairValidation
     {
         if (repair == null)
             return false;
-        if (repair.Date <= DateTime.Now)
-            return false;
         if (repair.Address == null)
             return false;
-        if (repair.Owner == null)
+        if (repair.OwnerID == null)
             return false;
-        if (repair.Item == null)
+        if (repair.ItemID == null)
             return false;
         return true;
     }
