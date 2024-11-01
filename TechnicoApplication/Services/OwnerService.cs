@@ -53,7 +53,10 @@ public class OwnerService : IOwnerService
     }
     public PropertyResponse<Owner> Display(int id) 
     {
-        var ownerdb = _db.Owners.Where(o => o.ID == id).FirstOrDefault();
+        var ownerdb = _db.Owners
+            .Include(o => o.Items)
+            .Include(o => o.Repair)
+            .FirstOrDefault(o => o.ID == id);
         if (!_validation.OwnerValidator(ownerdb))
         {
             return new PropertyResponse<Owner>

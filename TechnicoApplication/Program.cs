@@ -82,11 +82,11 @@ OwnerService ownerService = new OwnerService(db, ownerValidation);
 ItemService itemService = new ItemService(db, itemValidation);
 RepairService repairService = new RepairService(db, repairValidation);
 ownerService.Create(owner_one);
-//ownerService.Create(owner_two);
+ownerService.Create(owner_two);
 itemService.Create(item_one);
-//itemService.Create(item_two);
-//itemService.Create(item_three);
-//repairService.Create(repair_one);
+itemService.Create(item_two);
+itemService.Create(item_three);
+repairService.Create(repair_one);
 //repairService.Delete(10);
 //itemService.Delete(20);
 //itemService.Delete(47);
@@ -121,9 +121,32 @@ var owner_three = new Owner()
 ownerService.Create(owner_three);
 repairService.Create(repair_three);
 
-//var displayowner = ownerService.Display(36);
+var displayowner = ownerService.Display(46);
 //Console.WriteLine($"{displayowner.Value.ID} {displayowner.Value.Name} {displayowner.Value.Surname}");
 
+foreach (var item in displayowner.Value.Items)
+{
+    Console.WriteLine($"{item.ID} {item.E9Number}");
+}
+Console.WriteLine("-------");
+
+foreach (var repair in displayowner.Value.Repair)
+{
+    Console.WriteLine($"{repair.ID} {repair.Type}");
+}
+Console.WriteLine("-------");
+var viewitemlist = itemService.ViewItems(46);
+foreach (var item in viewitemlist)
+{
+    Console.WriteLine($"{item.ID} {item.E9Number}");
+}
+Console.WriteLine("-------");
+
+var searchrepairlist = repairService.SearchRepairs(46);
+foreach (var repair in searchrepairlist)
+{
+    Console.WriteLine($"{repair.ID} {repair.Type}");
+}
 
 //var displayitem = itemService.View(49);
 //Console.WriteLine($"{displayitem.Value.ID} {displayitem.Value.E9Number} {displayitem.Value.Address}");
