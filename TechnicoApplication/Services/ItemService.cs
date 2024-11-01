@@ -35,7 +35,15 @@ public class ItemService : IItemService
                 Value = existingItem
             };
         }
-
+        if (!_validation.ItemValidator(item))
+        {
+            return new PropertyResponse<Item>
+            {
+                Status = 2,
+                Description = "Item has invalid data",
+                Value = null
+            };
+        }
         _db.Items.Add(item);
         _db.SaveChanges();
         return new PropertyResponse<Item>
@@ -52,7 +60,7 @@ public class ItemService : IItemService
         {
             return new PropertyResponse<Item>
             {
-                Status = 2,
+                Status = 3,
                 Description = "Item not found",
                 Value = itemdb
             };
@@ -89,7 +97,7 @@ public class ItemService : IItemService
             itemdb.YearOfConstruction = item.YearOfConstruction;
             itemdb.Type = item.Type;
             itemdb.Owners = item.Owners;
-            itemdb.RepairID = item.RepairID;
+            itemdb.Repair = item.Repair;
             _db.SaveChanges();
             return new PropertyResponse<Item>
             {
@@ -100,7 +108,7 @@ public class ItemService : IItemService
         }
         return new PropertyResponse<Item>
         {
-            Status = 3,
+            Status = 4,
             Description = "Error updating item",
             Value = itemdb
         };
@@ -108,7 +116,7 @@ public class ItemService : IItemService
     public bool Delete(int id)
     {
         Item? itemdb = _db.Items.FirstOrDefault(i => i.ID == id);
-        if (_validation.ItemValidator(itemdb) && !itemdb.Owners.Any() && !itemdb.RepairID.Any())
+        if (_validation.ItemValidator(itemdb) && !itemdb.Owners.Any() && !itemdb.Repair.Any())
         {
             _db.Items.Remove(itemdb);
             _db.SaveChanges();

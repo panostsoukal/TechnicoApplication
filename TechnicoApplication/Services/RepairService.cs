@@ -34,6 +34,15 @@ public class RepairService : IRepairService
                 Value = existingRepair
             };
         }
+        if (!_validation.RepairValidator(repair))
+        {
+            return new PropertyResponse<Repair>
+            {
+                Status = 2,
+                Description = "Repair has invalid data",
+                Value = null
+            };
+        }
         _db.Repairs.Add(repair);
         _db.SaveChanges();
         return new PropertyResponse<Repair>
@@ -50,7 +59,7 @@ public class RepairService : IRepairService
         {
             return new PropertyResponse<Repair>
             {
-                Status = 2,
+                Status = 3,
                 Description = "Repair not found",
                 Value = repairdb
             };
@@ -64,7 +73,7 @@ public class RepairService : IRepairService
     }
     public List<Repair?> SearchRepairs(int id)
     {
-        var repairdb = _db.Repairs.FirstOrDefault(r => r.OwnerID == id);
+        var repairdb = _db.Repairs.FirstOrDefault(r => r.Owner.ID == id);
 
         if (!_validation.RepairValidator(repairdb))
         {
@@ -72,7 +81,7 @@ public class RepairService : IRepairService
         }
 
         var repairlist = _db.Repairs
-            .Where(r => r.OwnerID == id)
+            .Where(r => r.Owner.ID == id)
             .ToList();
         return repairlist;
     }
@@ -87,8 +96,8 @@ public class RepairService : IRepairService
             repairdb.Address = repair.Address;
             repairdb.Status = repair.Status;
             repairdb.Cost = repair.Cost;
-            repairdb.OwnerID = repair.OwnerID;
-            repairdb.ItemID = repair.ItemID;
+            repairdb.Owner = repair.Owner;
+            repairdb.Item = repair.Item;
             _db.SaveChanges();
             return new PropertyResponse<Repair>
             {
@@ -99,7 +108,7 @@ public class RepairService : IRepairService
         }
         return new PropertyResponse<Repair>
         {
-            Status = 2,
+            Status = 4,
             Description = "Error updating repair",
             Value = repair
         };

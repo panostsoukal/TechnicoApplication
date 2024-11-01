@@ -11,7 +11,7 @@ namespace TechnicoApplication.Interfaces;
 public interface IOwnerService
 {
     public PropertyResponse<Owner> Create(Owner owner);
-    public Owner? Display(int id);
+    public PropertyResponse<Owner> Display(int id);
     public PropertyResponse<Owner> Update(Owner owner);
     public bool Delete(int id);
 }

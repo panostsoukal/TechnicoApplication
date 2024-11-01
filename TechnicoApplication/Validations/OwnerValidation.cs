@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,17 +15,17 @@ public class OwnerValidation : IOwnerValidation
     {
         if (owner == null)
             return false;
-        if (owner.VAT == null)
+        if (owner.VAT.IsNullOrEmpty() || string.IsNullOrWhiteSpace(owner.VAT))
             return false;
-        if (owner.Name == null)
+        if (owner.Name.IsNullOrEmpty() || string.IsNullOrWhiteSpace(owner.Name))
             return false;
-        if (owner.Surname == null)
+        if (owner.Surname.IsNullOrEmpty() || string.IsNullOrWhiteSpace(owner.Surname))
             return false;
-        if (owner.Address == null)
+        if (owner.Address.IsNullOrEmpty() || string.IsNullOrWhiteSpace(owner.Address))
             return false;
-        if (owner.Email == null)
+        if (owner.Email.IsNullOrEmpty() || string.IsNullOrWhiteSpace(owner.Email))
             return false;
-        if (owner.Password == null)
+        if (owner.Password.IsNullOrEmpty() || string.IsNullOrWhiteSpace(owner.Password))
             return false;
         return true;
     }

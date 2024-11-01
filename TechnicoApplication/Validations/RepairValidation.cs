@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +15,7 @@ public class RepairValidation : IRepairValidation
     {
         if (repair == null)
             return false;
-        if (repair.Address == null)
-            return false;
-        if (repair.OwnerID == null)
-            return false;
-        if (repair.ItemID == null)
+        if (repair.Address.IsNullOrEmpty() || string.IsNullOrWhiteSpace(repair.Address))
             return false;
         return true;
     }

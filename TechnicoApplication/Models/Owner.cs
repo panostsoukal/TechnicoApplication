@@ -29,6 +29,6 @@ public class Owner
     public string Password { get; set; } = string.Empty;
     public UserType UserType { get; set; } = default;
     public List<Item> Items { get; set; } = [];
-    public List<int> RepairID { get; set; } = [];
+    public List<Repair> Repair { get; set; } = [];
 
 }

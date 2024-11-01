@@ -33,19 +33,42 @@ public class OwnerService : IOwnerService
                 Value = existingOwner
             };
         }
-
+        if (!_validation.OwnerValidator(owner)) 
+        {
+            return new PropertyResponse<Owner>
+            {
+                Status = 2,
+                Description = "Owner has invalid data",
+                Value = null
+            };
+        }
         _db.Owners.Add(owner);
         _db.SaveChanges();
-        return new PropertyResponse<Owner> 
+        return new PropertyResponse<Owner>
         {
             Status = 0,
             Description = "Success",
-            Value = owner 
+            Value = owner
         };
     }
-    public Owner? Display(int id) 
+    public PropertyResponse<Owner> Display(int id) 
     {
-        return _db.Owners.Where(o => o.ID == id).FirstOrDefault();
+        var ownerdb = _db.Owners.Where(o => o.ID == id).FirstOrDefault();
+        if (!_validation.OwnerValidator(ownerdb))
+        {
+            return new PropertyResponse<Owner>
+            {
+                Status = 3,
+                Description = "Owner not found",
+                Value = ownerdb
+            };
+        }
+        return new PropertyResponse<Owner>
+        {
+            Status = 0,
+            Description = "Success",
+            Value = ownerdb
+        };
     }
     public PropertyResponse<Owner> Update(Owner owner) 
     {
@@ -61,7 +84,7 @@ public class OwnerService : IOwnerService
             ownerdb.Password = owner.Password;
             ownerdb.UserType = owner.UserType;
             ownerdb.Items = owner.Items;
-            ownerdb.RepairID = owner.RepairID;
+            ownerdb.Repair = owner.Repair;
             _db.SaveChanges();
             return new PropertyResponse<Owner>
             {
@@ -72,7 +95,7 @@ public class OwnerService : IOwnerService
         }
         return new PropertyResponse<Owner>
         {
-            Status = 3,
+            Status = 4,
             Description = "Error updating owner",
             Value = owner
         };
@@ -81,7 +104,7 @@ public class OwnerService : IOwnerService
     {
         Owner? ownerdb = _db.Owners.FirstOrDefault(o => o.ID == id);
 
-        if (_validation.OwnerValidator(ownerdb) && !ownerdb.Items.Any() && !ownerdb.RepairID.Any())
+        if (_validation.OwnerValidator(ownerdb) && !ownerdb.Items.Any() && !ownerdb.Repair.Any())
         {
             _db.Owners.Remove(ownerdb);
             _db.SaveChanges();
